@@ -1,0 +1,61 @@
+The Brain-to-Text '25 competition is a cutting-edge challenge hosted on Kaggle that focuses on decoding intracortical neural activity into text—essentially translating brain signals into spoken words. The official codebase is available on GitHub and supports a full Python workflow for model training, evaluation, and analysis.
+
+Here’s a breakdown of the workflow and how it’s structured in Python:
+
+🧠 Brain-to-Text '25 Python Workflow Overview
+1. Data Preparation
+Script: download_data.py
+
+Purpose: Downloads and organizes neural activity data from Dryad.
+
+Format: Time series data aligned with phoneme and word labels.
+
+python
+from nejm_b2txt_utils import download_data
+download_data(target_dir="data/")
+2. Model Training
+Directory: model_training/
+
+Model: Custom RNN (PyTorch) baseline
+
+Script: train_model.py
+
+python
+import torch
+from model_training.rnn_model import BrainToTextRNN
+
+model = BrainToTextRNN(input_size=128, hidden_size=256, output_size=50)
+model.train(data_loader, epochs=50)
+3. Language Modeling
+Directory: language_model/
+
+Models: Pretrained 1-gram, 3-gram, and 5-gram models
+
+Purpose: Improves decoding accuracy by modeling word probabilities.
+
+python
+from language_model.ngram import NGramModel
+lm = NGramModel.load("languageModel_5gram.tar.gz")
+decoded_output = lm.decode(neural_predictions)
+4. Evaluation & Analysis
+Directory: analyses/
+
+Metrics: Word Error Rate (WER), phoneme accuracy
+
+Script: evaluate_model.py
+
+python
+from analyses.metrics import compute_wer
+wer = compute_wer(predicted_text, ground_truth_text)
+print(f"Word Error Rate: {wer:.2f}%")
+5. Utilities & Setup
+Directory: nejm_b2txt_utils/
+
+Scripts: setup.py, setup.sh, setup_lm.sh
+
+Purpose: Environment setup, dependency installation, and data linking.
+
+🧪 Bonus: Competition Integration
+The repo also includes baseline submission templates for Kaggle, allowing you to plug in your trained models and submit predictions directly.
+
+You can explore the full codebase on GitHub - Neuroprosthetics-Lab/nejm-brain-to-text or check out the Brain-to-Text '25 Kaggle competition page.
